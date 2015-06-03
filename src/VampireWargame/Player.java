@@ -9,34 +9,41 @@ public class Player {
     protected boolean active;
     protected Calendar createdOn;
 
-    public Player(String username, String password, int sc) {
+    public Player(String username, String password) 
+    {
         this.username = username;
         this.password = password;
         this.createdOn = Calendar.getInstance();
         this.active = true;        
     }
 
-    public String getUsername() {
+    public String getUsername() 
+    {
         return username;
     }
 
-    public String getPassword() {
+    public String getPassword() 
+    {
         return password;
     }
 
-    public int getScore() {
+    public int getScore() 
+    {
         return score;
     }
 
-    public void setUsername(String username) {
+    public void setUsername(String username) 
+    {
         this.username = username;
     }
 
-    public void setPassword(String password) {
+    public void setPassword(String password) 
+    {
         this.password = password;
     }
 
-    public void setScore(int score) {
+    public void setScore(int score) 
+    {
         this.score = score;
     }
     
