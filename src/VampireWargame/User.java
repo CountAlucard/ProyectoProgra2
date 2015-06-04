@@ -37,7 +37,8 @@ public class User extends Player implements DataInMemory{
             }
     }
     
-    public final boolean userExists(String user, String pass){
+    public final boolean userExists(String user, String pass)
+    {
         if(search(user) != null && searchPassword(user, pass) != false)
             return true;
         return false;

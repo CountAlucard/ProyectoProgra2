@@ -15,7 +15,7 @@ public class MainMenu {
         try{
             do{
 
-                System.out.println("\n----------------");
+                System.out.println("\n-----Welcome to Vampire Wargame-----");
                 System.out.println("1- Login");
                 System.out.println("2- Create Player");
                 System.out.println("3- Exit");
@@ -44,12 +44,12 @@ public class MainMenu {
 
                                 switch(resp){
                                     case 1:
-                                        System.out.println("-----Vampire Wargame-----");
-                                        System.out.println("\n 1- Nueva Partida");
-                                        System.out.println("\n 2- Cargar Partida");
-                                        System.out.println("\n 3- Eliminar Partida");
-                                        System.out.println("\n 4- Transferir Partida");
-                                        System.out.println("\n 5- Regresar a Main Menu");
+                                        System.out.println("\n-----Vampire Wargame-----");
+                                        System.out.println("1- Nueva Partida");
+                                        System.out.println("2- Cargar Partida");
+                                        System.out.println("3- Eliminar Partida");
+                                        System.out.println("4- Transferir Partida");
+                                        System.out.println("5- Regresar a Main Menu");
 
                                         int respg = lea.nextInt();
 
