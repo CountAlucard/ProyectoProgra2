@@ -72,7 +72,7 @@ public class User extends Player implements DataInMemory{
     public void printInfo(String user)
     {        
         Player player = search(user);
-        System.out.println("Username: "+player.getUsername()+"\nCreated on: "+player.createdOn.getTime()+"\nScore: "+player.getScore());
+        System.out.println("Username: "+player.getUsername()+"\nCreated on: "+player.createdOn.getTime()+"\nScore: "+player.getScore()+"\nPartidas Pendientes: "+0);
     }
 
     @Override
