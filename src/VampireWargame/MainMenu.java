@@ -1,6 +1,7 @@
 
 package VampireWargame;
 
+import java.util.Random;
 import java.util.Scanner;
 
 public final class MainMenu {      
@@ -10,7 +11,7 @@ public final class MainMenu {
         Tablero tb = new Tablero();
         User us = new User("","");
         Scanner lea = new Scanner(System.in);
-        boolean loggedin = true, cuenta = true;
+        boolean player1, player2, loggedin, cuenta, game;
         int op;
         
         try{
@@ -30,7 +31,7 @@ public final class MainMenu {
                         String pass = lea.next();
 
                         if(us.userExists(user, pass)){
-
+                            loggedin = true;
                             System.out.println("Log in exitoso");
 
 
@@ -56,13 +57,77 @@ public final class MainMenu {
 
                                         switch(respg){
                                             case 1:
+                                                player1 = true;                                                                                                                                        
+                                                player2 = true;
+                                                game = true;
                                                 System.out.println("Ingrese el usuario contrincante: ");
                                                 String user2 = lea.next();
                                                 
                                                 if(us.search(user2)!=null){
-                                                    System.out.println("-------------------------");
+                                                    System.out.println("------------------------------");
                                                     tb.Initiate();
                                                     tb.PrintBoard();
+                                                    do{
+                                                        if(player1){                                                            
+                                                            tb.rpieceW = Tablero.pieceW.get(new Random().nextInt(Tablero.pieceW.size()));
+                                                            System.out.println("\n"+tb.rpieceW);
+                                                            System.out.println("\nPlayer "+user+" ingrese las coordenadas para "+tb.rpieceW+": ");
+                                                            int mp1x = lea.nextInt();
+                                                            int mp1y = lea.nextInt();
+                                                            if(mp1x == -1 && mp1y ==-1){
+                                                                System.out.println("Player "+user+" desea retirarse?");
+                                                                String ret1 = lea.next();
+                                                                if(ret1.equalsIgnoreCase("SI")){
+                                                                    System.out.println("El player "+user2+" ha ganado por default.");
+                                                                    us.search(user2).setScore(us.getScore()+3);
+                                                                    player2 = false;                                                                    
+                                                                    player1 = false;
+                                                                    game = false;
+                                                                }
+                                                            }
+                                                            else if(mp1x == -2 && mp1y == -2){
+                                                                System.out.println("La partida ha sido guardada.");
+                                                                player2 = false;                                                                    
+                                                                player1 = false;
+                                                                game = false;
+                                                            }
+                                                            else{
+                                                                tb.PrintBoard();
+                                                                player1 = false;
+                                                            }
+                                                        }                                                        
+                                                        
+                                                        if(player2){
+                                                            tb.rpieceB = Tablero.pieceB.get(new Random().nextInt(Tablero.pieceB.size()));
+                                                            System.out.println("\n"+tb.rpieceB);
+                                                            System.out.println("\nPlayer "+user2+" ingrese las coordenadas para "+tb.rpieceB+": ");
+                                                            int mp2x = lea.nextInt();
+                                                            int mp2y = lea.nextInt();
+                                                            if(mp2x == -1 && mp2y ==-1){
+                                                                System.out.println("Player "+user2+" desea retirarse?");
+                                                                String ret1 = lea.next();
+                                                                if(ret1.equalsIgnoreCase("SI")){
+                                                                    System.out.println("El player "+user+" ha ganado por default.");
+                                                                    us.search(user).setScore(us.getScore()+3);
+                                                                    player1 = false;                                                                                                                                        
+                                                                    player2 = false;
+                                                                    game = false;
+                                                                }
+                                                            }
+                                                            else if(mp2x == -2 && mp2y == -2){
+                                                                System.out.println("La partida ha sido guardada.");
+                                                                player2 = false;                                                                    
+                                                                player1 = false;
+                                                                game = false;
+                                                            }
+                                                            else{
+                                                                tb.PrintBoard();
+                                                                player2 = false;
+                                                            }
+                                                        }
+                                                        
+                                                        
+                                                    }while(game);
                                                     
                                                 }
                                                 
@@ -83,6 +148,7 @@ public final class MainMenu {
                                         break;
                                     case 2:
                                         do{
+                                            cuenta = true;
                                             System.out.println("\n-----MI CUENTA-----");
                                             System.out.println("1- Ver Mi Informacion");
                                             System.out.println("2- Cambiar Password");
@@ -159,8 +225,10 @@ public final class MainMenu {
 
                         if(us.createUser(u, p))
                             System.out.println("Player creado con exito.");
-                        else
-                            System.err.println("El usuario ya existe, intente de nuevo.");
+                        else if(us.search(u) != null)
+                            System.out.println("El usuario ya existe, intente de nuevo.");
+                        else if(p.length() <= 8)
+                            System.out.println("Password muy corta, intente de nuevo.");
                         break;
                 }
 

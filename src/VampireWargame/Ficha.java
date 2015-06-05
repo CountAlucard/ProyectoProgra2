@@ -11,9 +11,7 @@ public abstract class Ficha {
         this.colorFicha = colorFicha;
     }
     
-    public int getHealthPoints(){
-        return healthPoints;
-    }
+    public abstract int getHealthPoints();
     
     public boolean validateMovement(int Xpos, int Ypos, int XposFinal, int YposFinal, int mov)
     {             

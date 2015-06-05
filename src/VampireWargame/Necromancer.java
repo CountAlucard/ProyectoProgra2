@@ -52,5 +52,10 @@ public class Necromancer extends Ficha{
         }
     }
 
+    @Override
+    public int getHealthPoints() {
+        return healthPoints;
+    }
+
     
 }

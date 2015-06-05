@@ -1,12 +1,33 @@
 
 package VampireWargame;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 public class Tablero {
     public static Ficha pieces[][] = new Ficha[6][6];
     public static int movement, damage;
+    static ArrayList<String> pieceB, pieceW;
+    String rpieceB, rpieceW;
            
     public Tablero(){
+      pieceB = new ArrayList<>();
+      pieceB.add("WW1B");
+      pieceB.add("VP1B");
+      pieceB.add("NM1B");
+      pieceB.add("NM2B");
+      pieceB.add("VP2B");
+      pieceB.add("WW2B");
+      rpieceB = pieceB.get(new Random().nextInt(pieceB.size()));
       
+      pieceW = new ArrayList<>();
+      pieceW.add("WW1W");
+      pieceW.add("VP1W");
+      pieceW.add("NM1W");
+      pieceW.add("NM2W");
+      pieceW.add("VP2W");
+      pieceW.add("WW2W");
+      rpieceW = pieceW.get(new Random().nextInt(pieceW.size()));
     }
     
     Ficha WW1B = new Werewolf("WW1B", "Black");
@@ -80,7 +101,8 @@ public class Tablero {
       System.out.println(" "); 
     }
     
-    public boolean Movement(String iniPos,String finPos){
+    public boolean Movement(String iniPos,String finPos)
+    {
        String p1= ""+iniPos.charAt(1);
        String p2= ""+finPos.charAt(1);
       

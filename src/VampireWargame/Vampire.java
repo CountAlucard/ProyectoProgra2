@@ -29,6 +29,11 @@ public class Vampire extends Ficha{
         return 0;
     }
 
+    @Override
+    public int getHealthPoints() {
+        return healthPoints;
+    }
+
  
         
 }

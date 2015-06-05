@@ -13,5 +13,10 @@ public class Werewolf extends Ficha{
         movements = 1;
     }
 
+    @Override
+    public int getHealthPoints() {
+        return healthPoints;
+    }
+
     
 }

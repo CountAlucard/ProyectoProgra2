@@ -24,6 +24,11 @@ public class Ghoul extends Ficha{
         return false;
     }
 
+    @Override
+    public int getHealthPoints() {
+        return healthPoints;
+    }
+
     
     
 }
