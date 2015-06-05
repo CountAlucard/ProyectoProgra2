@@ -3,14 +3,15 @@ package VampireWargame;
 
 import java.util.Scanner;
 
-public class MainMenu {      
+public final class MainMenu {      
         
     public static void main(String[] args) 
-    {
-        
+    {        
+        Tablero tb = new Tablero();
         User us = new User("","");
         Scanner lea = new Scanner(System.in);
-        boolean seguir = true, loggedin = true;
+        boolean loggedin = true, cuenta = true;
+        int op;
         
         try{
             do{
@@ -19,9 +20,9 @@ public class MainMenu {
                 System.out.println("1- Login");
                 System.out.println("2- Create Player");
                 System.out.println("3- Exit");
-                int answer = lea.nextInt();
+                op = lea.nextInt();
 
-                switch(answer){
+                switch(op){
                     case 1:
                         System.out.println("\nUsername: ");
                         String user = lea.next();
@@ -55,6 +56,16 @@ public class MainMenu {
 
                                         switch(respg){
                                             case 1:
+                                                System.out.println("Ingrese el usuario contrincante: ");
+                                                String user2 = lea.next();
+                                                
+                                                if(us.search(user2)!=null){
+                                                    System.out.println("-------------------------");
+                                                    tb.Initiate();
+                                                    tb.PrintBoard();
+                                                    
+                                                }
+                                                
                                                 break;
                                             case 2:
                                                 System.out.println("La opcion estara pronto!");
@@ -71,42 +82,60 @@ public class MainMenu {
 
                                         break;
                                     case 2:
-                                        System.out.println("\n-----MI CUENTA-----");
-                                        System.out.println("1- Ver Mi Informacion");
-                                        System.out.println("2- Cambiar Password");
-                                        System.out.println("3- Cerrar Mi Cuenta");
-                                        System.out.println("4- Regresar a Main Menu");
+                                        do{
+                                            System.out.println("\n-----MI CUENTA-----");
+                                            System.out.println("1- Ver Mi Informacion");
+                                            System.out.println("2- Cambiar Password");
+                                            System.out.println("3- Cerrar Mi Cuenta");
+                                            System.out.println("4- Regresar a Main Menu");
 
-                                        int respc = lea.nextInt();
+                                            int respc = lea.nextInt();
 
-                                        switch(respc){
-                                            case 1:
-                                                us.printInfo(user);
-                                                break;
-                                            case 2:
-                                                System.out.println("\n Ingrese su password actual: ");
-                                                String passact = lea.next();
+                                            switch(respc){
+                                                case 1:
+                                                    us.printInfo(user);
+                                                    break;
+                                                case 2:
+                                                    System.out.println("\n Ingrese su password actual: ");
+                                                    String passact = lea.next();
 
-                                                if(us.searchPassword(user, passact)){
-                                                    System.out.println("Ingrese su nueva passowrd: ");
-                                                    String newpass = lea.next();
+                                                    if(us.searchPassword(user, passact)){
+                                                        System.out.println("Ingrese su nueva passowrd: ");
+                                                        String newpass = lea.next();
 
-                                                    if(newpass.length() >= 8){
-                                                        us.changePassword(user, newpass);
-                                                        System.out.println("Password cambiada con exito!");
+                                                        if(newpass.length() >= 8){
+                                                            us.changePassword(user, newpass);
+                                                            System.out.println("Password cambiada con exito!");
+                                                        }
+                                                        else
+                                                            System.out.println("La nueva password debe ser de 8 caracteres minimo.");
+                                                    }
+                                                    else{
+                                                        System.out.println("La password ingresada no concuerda con la actual.");
+                                                    }
+                                                    break;
+                                                case 3:
+                                                    System.out.println("\n Ingrese su password: ");
+                                                    passact = lea.next();
+
+                                                    if(us.searchPassword(user, passact)){
+                                                        System.out.println("Esta seguro que desea eliminar su cuenta?");
+                                                        String seg = lea.next();
+                                                        
+                                                        if(seg.equalsIgnoreCase("si")){
+                                                            System.out.println("Cuenta eliminada con exito!");
+                                                            us.deleteUser(user, pass);
+                                                            loggedin = false;
+                                                        }
                                                     }
                                                     else
-                                                        System.out.println("La nueva password debe ser de 8 caracteres minimo.");
-                                                }
-                                                else{
-                                                    System.out.println("La password ingresada no concuerda con la actual.");
-                                                }
-                                                break;
-                                            case 3:
-                                                break;
-                                            case 4:
-                                                break;
-                                        }
+                                                        System.out.println("La password ingresada es correcta.");
+                                                    break;
+                                                case 4:
+                                                    cuenta = false;
+                                                    break;
+                                            }
+                                        }while(cuenta);
                                         break;
                                     case 3:
                                         System.out.println("La opcion estara pronto!");
@@ -120,7 +149,7 @@ public class MainMenu {
                         }
                         else
                             System.out.println("\nUsername o Password incorrecto, intente de nuevo.");
-                            break;
+                        break;
 
                     case 2:
                         System.out.println("Ingrese su nuevo username: ");
@@ -133,11 +162,10 @@ public class MainMenu {
                         else
                             System.err.println("El usuario ya existe, intente de nuevo.");
                         break;
-                    case 3:
-                        System.exit(0);
                 }
 
-            }while(seguir);
+            }while(op!=3);
+            
         }catch(Exception ex){
             System.out.println("Error: "+ex.getMessage());
         }

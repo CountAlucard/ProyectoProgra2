@@ -4,6 +4,10 @@ package VampireWargame;
 public class Tablero {
     public static Ficha pieces[][] = new Ficha[6][6];
     public static int movement, damage;
+           
+    public Tablero(){
+      
+    }
     
     Ficha WW1B = new Werewolf("WW1B", "Black");
     Ficha VP1B = new Vampire("VP1B","Black");
