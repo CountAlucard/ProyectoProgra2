@@ -1,7 +1,7 @@
 
 package VampireWargame;
 
-public interface DataInMemory {
+public interface DataInFile {
     boolean createUser(String name, String password);
     void deleteUser(String name, String password);
     void saveGame();
@@ -10,5 +10,4 @@ public interface DataInMemory {
     void transferGame();
     void printLogs();
     void printRanking();
-    
 }

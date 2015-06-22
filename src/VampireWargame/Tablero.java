@@ -119,7 +119,7 @@ public class Tablero {
                 
         if(pieces[Ypos][Xpos] instanceof Necromancer){
             movement =((Necromancer)pieces[Ypos][Xpos]).movements;
-            if(((Necromancer)pieces[Ypos][Xpos]).validateMovement(Xpos, Ypos, Xpos, Ypos, movement)){
+            if(((Necromancer)pieces[Ypos][Xpos]).validateMovement(Xpos, Ypos, XposFinal, YposFinal, movement)){
                MakeMove(Xpos,Ypos,XposFinal,YposFinal);
                return true;
             }

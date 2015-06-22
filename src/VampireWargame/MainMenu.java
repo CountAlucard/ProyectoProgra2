@@ -9,7 +9,7 @@ public final class MainMenu {
     public static void main(String[] args) 
     {        
         Tablero tb = new Tablero();
-        User us = new User("","");
+        User us = new User();
         Scanner lea = new Scanner(System.in);
         boolean player1, player2, loggedin, cuenta, game;
         int op;
@@ -63,7 +63,7 @@ public final class MainMenu {
                                                 System.out.println("Ingrese el usuario contrincante: ");
                                                 String user2 = lea.next();
                                                 
-                                                if(us.search(user2)!=null){
+                                                if(us.search(user2)){
                                                     System.out.println("------------------------------");
                                                     tb.Initiate();
                                                     tb.PrintBoard();
@@ -79,7 +79,7 @@ public final class MainMenu {
                                                                 String ret1 = lea.next();
                                                                 if(ret1.equalsIgnoreCase("SI")){
                                                                     System.out.println("El player "+user2+" ha ganado por default.");
-                                                                    us.search(user2).setScore(us.getScore()+3);
+                                                                    us.setScore(user2,+3);
                                                                     player2 = false;                                                                    
                                                                     player1 = false;
                                                                     game = false;
@@ -108,7 +108,7 @@ public final class MainMenu {
                                                                 String ret1 = lea.next();
                                                                 if(ret1.equalsIgnoreCase("SI")){
                                                                     System.out.println("El player "+user+" ha ganado por default.");
-                                                                    us.search(user).setScore(us.getScore()+3);
+                                                                    us.setScore(user,+3);
                                                                     player1 = false;                                                                                                                                        
                                                                     player2 = false;
                                                                     game = false;
@@ -190,8 +190,10 @@ public final class MainMenu {
                                                         
                                                         if(seg.equalsIgnoreCase("si")){
                                                             System.out.println("Cuenta eliminada con exito!");
-                                                            us.deleteUser(user, pass);
+                                                            us.deleteUser(user, pass);    
+                                                            cuenta = false;
                                                             loggedin = false;
+                                                            break;
                                                         }
                                                     }
                                                     else
@@ -214,7 +216,7 @@ public final class MainMenu {
 
                         }
                         else
-                            System.out.println("\nUsername o Password incorrecto, intente de nuevo.");
+                            System.out.println("\nUsername o Password inexistente, intente de nuevo.");
                         break;
 
                     case 2:
@@ -225,7 +227,7 @@ public final class MainMenu {
 
                         if(us.createUser(u, p))
                             System.out.println("Player creado con exito.");
-                        else if(us.search(u) != null)
+                        else if(us.search(u))
                             System.out.println("El usuario ya existe, intente de nuevo.");
                         else if(p.length() <= 8)
                             System.out.println("Password muy corta, intente de nuevo.");

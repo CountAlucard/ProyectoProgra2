@@ -6,7 +6,8 @@ public abstract class Ficha {
     
     protected int attackDamage, healthPoints, shieldPoints, movements;              
 
-    public Ficha(String nameFicha, String colorFicha) {
+    public Ficha(String nameFicha, String colorFicha) 
+    {
         this.nameFicha = nameFicha;
         this.colorFicha = colorFicha;
     }

@@ -1,78 +1,178 @@
-
 package VampireWargame;
 
-import java.util.ArrayList;
+import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.util.Date;
 
-public class User extends Player implements DataInMemory{
-    ArrayList<Player> users;
+public class User implements DataInFile {
+    RandomAccessFile players;
 
-    public User(String username, String password)
-    {
-        super(username, password);
-        users = new ArrayList<>();
+    public User() {
+        try {
+            players = new RandomAccessFile("players.vwg", "rw");
+        } catch (IOException e) {
+            System.out.println("This shouldn't happen!");
+        }
     }
-    
-    
+
+    //Funcion que creara una nueva entrada en el archivo players.vwg y creara un folder del mismo.
     @Override
-    public boolean createUser(String user, String pass)
-    {
-        if(search(user) == null){
-            if(pass.length() >= 8){
-                users.add(new Player(user,pass));            
+    public final boolean createUser(String user, String pass) {
+        if (!search(user)) {
+            if (pass.length() >= 8) {
+                new File(user).mkdir();
+                try {
+                    create(user, pass);
+                } catch (IOException e) {
+                    System.out.println("This won't happen.");
+                }
                 return true;
             }
         }
-        return false;        
+        return false;
     }
-    
-    
+
+    //Funcion que eliminara el folder de x Usuario.
     @Override
-    public void deleteUser(String user, String pass)
-    {
-        Player player = search(user);
-        if(player != null)
-            if(player.getPassword().equals(pass)){                
-                player.active = false;
-                users.remove(player);
+    public final void deleteUser(String user, String pass) {
+        try {
+            if (search(user)) {
+                players.readUTF();
+                if (players.readUTF().equals(pass)) {
+                    players.readInt();
+                    players.readLong();
+                    players.writeBoolean(false);
+                    deleteFiles(user);
+                }
             }
+        } catch (IOException e) {
+            System.out.println("");
+        }
     }
     
-    public final boolean userExists(String user, String pass)
-    {
-        if(search(user) != null && searchPassword(user, pass) != false)
-            return true;
+    public void setScore(String user, int nscore){
+        try{
+            if(search(user)){
+            players.readUTF();
+            int score = players.readInt();
+            players.seek(players.getFilePointer()-4);
+            players.writeInt(score+nscore);
+            }
+        }catch(IOException e){
+            System.out.println("");
+        }
+        
+    }
+
+    //Funcion para validar que el usuario exista en el archivo players.vwg
+    public boolean userExists(String user, String pass) {
+        try {
+            if (search(user)) {
+                players.readUTF();
+                if (players.readUTF().equals(pass)) {
+                    return true;
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("");
+        }
         return false;
     }
-    
-    
-    public Player search(String user)
-    {
-        for(Player u: users)
-            if(u.getUsername().equals(user))
-                return u;
-        return null;
-    }
-    
-    public boolean searchPassword(String user1, String pass)
-    {
-        Player player = search(user1);
-        if(player.getPassword().equals(pass))
-            return true;
+
+    //Funcion search para encontrar x usuario en el archivo players.vwg
+    public boolean search(String user) {
+        try {
+            players.seek(0);
+            while (players.getFilePointer() < players.length()) {
+                long pos = players.getFilePointer();
+                if (players.readUTF().equals(user)) {
+                    players.seek(pos);
+                    return true;
+                }
+                players.readUTF();
+                players.readInt();
+                players.readLong();
+                players.readBoolean();
+            }
+        } catch (IOException e) {
+            System.out.println("");
+        }
         return false;
     }
-    
-    public void changePassword(String user, String pass)
-    {
-        Player player = search(user);
-        if(player != null)
-            if(pass.length() >= 8)
-                player.setPassword(pass);        
+
+    //Funcion para validar la password de un usuario en el archivo players.vwg
+    public boolean searchPassword(String user, String pass) {
+        try {
+            if (search(user)) {
+                players.readUTF();
+                if (players.readUTF().equals(pass)) {
+                    return true;
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("");
+        }
+        return false;
     }
-    
-    public void printInfo(String user)
-    {        
-        Player player = search(user);
-        System.out.println("Username: "+player.getUsername()+"\nCreated on: "+player.createdOn.getTime()+"\nScore: "+player.getScore()+"\nPartidas Pendientes: "+0);
+
+    //Funcion que permite cambiar la password en el archivo players.vwg
+    public void changePassword(String user, String pass) {
+        if (search(user)) {            
+            if (pass.length() >= 8) {
+                try {
+                    players.readUTF();
+                    players.writeUTF(pass);
+                } catch (IOException e) {
+                    System.out.println("");
+                }
+            }
+        }
+    }
+
+    //Funcion para imprimir todos los datos de x usuario del archivo players.vwg
+    public void printInfo(String user) {
+        String activa;
+        try{
+            if(search(user)){
+                String usern = players.readUTF();
+                String pass = players.readUTF();
+                int score = players.readInt();            
+                String current = new Date(players.readLong()).toString();
+                boolean active = players.readBoolean();
+                
+                if(active)
+                    activa = "Activa";
+                else
+                    activa = "Inactiva";
+                
+                System.out.println("\nUsername: "+usern+"\nPassword: "+pass+
+                        "\nScore: "+score+"\nFecha de Creacion: "+current+
+                        "\nEstado: "+activa);
+            }
+        }catch(IOException e){
+            System.out.println("");
+        }
+    }
+
+    private void create(String u, String p) throws IOException {
+        players.seek(players.length());
+        players.writeUTF(u);
+        players.writeUTF(p);
+        players.writeInt(0);
+        players.writeLong(new Date().getTime());
+        players.writeBoolean(true);
+    }
+
+    //Funcion que permite eliminar archivos dentro de un Folder.
+    private void deleteFiles(String user) {
+        File index = new File(user);
+        String[] entries = index.list();
+        for (String s : entries) {
+            File currentFile = new File(index.getPath(), s);
+            currentFile.delete();
+        }
+        index.delete();
     }
 
     @Override
