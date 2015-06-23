@@ -63,7 +63,7 @@ public final class MainMenu {
                                                 System.out.println("Ingrese el usuario contrincante: ");
                                                 String user2 = lea.next();
                                                 
-                                                if(us.search(user2)){
+                                                if(us.search(user2)!=null){
                                                     System.out.println("------------------------------");
                                                     tb.Initiate();
                                                     tb.PrintBoard();
@@ -166,30 +166,33 @@ public final class MainMenu {
                                                     String passact = lea.next();
 
                                                     if(us.searchPassword(user, passact)){
-                                                        System.out.println("Ingrese su nueva passowrd: ");
+                                                        System.out.println("Ingrese su nueva password: ");
                                                         String newpass = lea.next();
 
                                                         if(newpass.length() >= 8){
                                                             us.changePassword(user, newpass);
                                                             System.out.println("Password cambiada con exito!");
+                                                            break;
                                                         }
-                                                        else
+                                                        else{
                                                             System.out.println("La nueva password debe ser de 8 caracteres minimo.");
+                                                            break;
+                                                        }
                                                     }
                                                     else{
                                                         System.out.println("La password ingresada no concuerda con la actual.");
+                                                        break;
                                                     }
-                                                    break;
                                                 case 3:
                                                     System.out.println("\n Ingrese su password: ");
                                                     passact = lea.next();
 
                                                     if(us.searchPassword(user, passact)){
-                                                        System.out.println("Esta seguro que desea eliminar su cuenta?");
+                                                        System.out.println("Esta seguro que desea cerrar su cuenta?");
                                                         String seg = lea.next();
                                                         
                                                         if(seg.equalsIgnoreCase("si")){
-                                                            System.out.println("Cuenta eliminada con exito!");
+                                                            System.out.println("Su cuenta ha sido cerrada con exito!");
                                                             us.deleteUser(user, pass);    
                                                             cuenta = false;
                                                             loggedin = false;
@@ -227,7 +230,7 @@ public final class MainMenu {
 
                         if(us.createUser(u, p))
                             System.out.println("Player creado con exito.");
-                        else if(us.search(u))
+                        else if(us.search(u)!=null)
                             System.out.println("El usuario ya existe, intente de nuevo.");
                         else if(p.length() <= 8)
                             System.out.println("Password muy corta, intente de nuevo.");

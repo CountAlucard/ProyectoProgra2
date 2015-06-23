@@ -6,6 +6,7 @@ import java.io.RandomAccessFile;
 import java.util.Date;
 
 public class User implements DataInFile {
+
     RandomAccessFile players;
 
     public User() {
@@ -19,7 +20,7 @@ public class User implements DataInFile {
     //Funcion que creara una nueva entrada en el archivo players.vwg y creara un folder del mismo.
     @Override
     public final boolean createUser(String user, String pass) {
-        if (!search(user)) {
+        if (search(user) == null) {
             if (pass.length() >= 8) {
                 new File(user).mkdir();
                 try {
@@ -37,8 +38,8 @@ public class User implements DataInFile {
     @Override
     public final void deleteUser(String user, String pass) {
         try {
-            if (search(user)) {
-                players.readUTF();
+            if (search(user) != null) {
+
                 if (players.readUTF().equals(pass)) {
                     players.readInt();
                     players.readLong();
@@ -50,26 +51,26 @@ public class User implements DataInFile {
             System.out.println("");
         }
     }
-    
-    public void setScore(String user, int nscore){
-        try{
-            if(search(user)){
-            players.readUTF();
-            int score = players.readInt();
-            players.seek(players.getFilePointer()-4);
-            players.writeInt(score+nscore);
+
+    public void setScore(String user, int nscore) {
+        try {
+            if (search(user) != null) {
+
+                players.readUTF();
+                int score = players.readInt();
+                players.seek(players.getFilePointer() - 4);
+                players.writeInt(score + nscore);
             }
-        }catch(IOException e){
+        } catch (IOException e) {
             System.out.println("");
         }
-        
+
     }
 
     //Funcion para validar que el usuario exista en el archivo players.vwg
     public boolean userExists(String user, String pass) {
         try {
-            if (search(user)) {
-                players.readUTF();
+            if (search(user) != null) {
                 if (players.readUTF().equals(pass)) {
                     return true;
                 }
@@ -81,14 +82,14 @@ public class User implements DataInFile {
     }
 
     //Funcion search para encontrar x usuario en el archivo players.vwg
-    public boolean search(String user) {
+    public String search(String user) {
         try {
             players.seek(0);
             while (players.getFilePointer() < players.length()) {
-                long pos = players.getFilePointer();
+
                 if (players.readUTF().equals(user)) {
-                    players.seek(pos);
-                    return true;
+
+                    return user;
                 }
                 players.readUTF();
                 players.readInt();
@@ -98,14 +99,14 @@ public class User implements DataInFile {
         } catch (IOException e) {
             System.out.println("");
         }
-        return false;
+        return null;
     }
 
     //Funcion para validar la password de un usuario en el archivo players.vwg
     public boolean searchPassword(String user, String pass) {
         try {
-            if (search(user)) {
-                players.readUTF();
+            if (search(user) != null) {
+
                 if (players.readUTF().equals(pass)) {
                     return true;
                 }
@@ -118,10 +119,10 @@ public class User implements DataInFile {
 
     //Funcion que permite cambiar la password en el archivo players.vwg
     public void changePassword(String user, String pass) {
-        if (search(user)) {            
+        if (search(user) != null) {
             if (pass.length() >= 8) {
                 try {
-                    players.readUTF();
+
                     players.writeUTF(pass);
                 } catch (IOException e) {
                     System.out.println("");
@@ -133,24 +134,25 @@ public class User implements DataInFile {
     //Funcion para imprimir todos los datos de x usuario del archivo players.vwg
     public void printInfo(String user) {
         String activa;
-        try{
-            if(search(user)){
-                String usern = players.readUTF();
-                String pass = players.readUTF();
-                int score = players.readInt();            
-                String current = new Date(players.readLong()).toString();
-                boolean active = players.readBoolean();
-                
-                if(active)
-                    activa = "Activa";
-                else
-                    activa = "Inactiva";
-                
-                System.out.println("\nUsername: "+usern+"\nPassword: "+pass+
-                        "\nScore: "+score+"\nFecha de Creacion: "+current+
-                        "\nEstado: "+activa);
+        try {
+            players.seek(0);
+            String usern = search(user);
+            String pass = players.readUTF();
+            int score = players.readInt();
+            String current = new Date(players.readLong()).toString();
+            boolean active = players.readBoolean();
+
+            if (active == true) {
+                activa = "Inactiva";
+            } else {
+                activa = "Activa";
             }
-        }catch(IOException e){
+
+            System.out.println("\nUsername: " + usern + "\nPassword: " + pass
+                    + "\nScore: " + score + "\nFecha de Creacion: " + current
+                    + "\nEstado: " + activa);
+
+        } catch (IOException e) {
             System.out.println("");
         }
     }
